@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>bin/avrdude.conf</file>
+        <file>bin/avrdude.exe</file>
+    </qresource>
+</RCC>
