@@ -114,11 +114,11 @@ void Widget::do_cmd(const QString &path)
 
         if (has_hfuse)
         {
-            fuses += QString("-U hfuse:w:0x%1:m").arg(last_hfuse);
+            fuses += QString(" -U hfuse:w:0x%1:m").arg(last_hfuse);
         }
         if (has_efuse)
         {
-            fuses += QString("-U efuse:w:0x%1:m").arg(last_efuse);
+            fuses += QString(" -U efuse:w:0x%1:m").arg(last_efuse);
         }
     }
 
