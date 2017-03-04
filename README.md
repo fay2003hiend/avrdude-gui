@@ -1,5 +1,6 @@
 # avrdude-gui
 avrdude front-end written in Qt
+![alt tag](https://raw.githubusercontent.com/fay2003hiend/avrdude-gui/master/bin/snapshot.png)
 
 ##How to compile
 - The folder named [bin] under source code, you can update avrdude executable and avrdude.conf files inside for other platforms
