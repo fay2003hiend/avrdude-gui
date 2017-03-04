@@ -2,7 +2,7 @@
 avrdude front-end written in Qt
 
 ##How to compile
-- Create folder named [bin] under source code, copy avrdude executable and avrdude.conf files inside
+- The folder named [bin] under source code, you can update avrdude executable and avrdude.conf files inside for other platforms
 - Files can be downloaded from http://download.savannah.gnu.org/releases/avrdude/
 
 ##How to use
