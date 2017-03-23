@@ -125,7 +125,7 @@ void Widget::do_cmd(const QString &path)
     if (!path.isEmpty()) {
         update = QString(" -U flash:w:\"%1\":i").arg(path);
     }
-    QString ret = QString("avrdude.exe -s -C avrdude.conf -c %1 -p %2 ")
+    QString ret = QString("avrdude -s -C avrdude.conf -c %1 -p %2 ")
             .arg(last_programmer, last_device)
             + fuses
             + update
@@ -264,6 +264,7 @@ bool Widget::fill_combobox(const QString &prog, QComboBox *box, const QString& m
 
 void Widget::slot_init()
 {
+#ifdef Q_OS_WIN32
     if (!extract_asset(":/bin/avrdude.exe", "avrdude.exe")
             || !extract_asset(":/bin/avrdude.conf", "avrdude.conf"))
     {
@@ -271,7 +272,9 @@ void Widget::slot_init()
                              tr("avrdude binaries can't be extracted!"),
                              QMessageBox::Ok);
         qApp->quit();
+        return;
     }
+#endif
 
     QSettings conf("Qavrdude.ini", QSettings::IniFormat);
     READ_STR(last_programmer);
@@ -283,8 +286,15 @@ void Widget::slot_init()
     READ_BOOL(do_fuse);
     READ_BOOL(has_efuse);
 
-    fill_combobox("avrdude.exe -c?", ui->comboBox_programmer, last_programmer);
-    fill_combobox("avrdude.exe -p?", ui->comboBox_device, last_device);
+    if (!fill_combobox("avrdude -c?", ui->comboBox_programmer, last_programmer))
+    {
+        QMessageBox::warning(this, tr("Error"),
+                             tr("avrdude not installed on the system!"),
+                             QMessageBox::Ok);
+        qApp->quit();
+        return;
+    }
+    fill_combobox("avrdude -p?", ui->comboBox_device, last_device);
     toUI();
 
     this->setAcceptDrops(true);
@@ -296,10 +306,15 @@ void Widget::slot_read()
     last_programmer = ui->comboBox_programmer->currentText();
     last_device = ui->comboBox_device->currentText();
     last_arguments = ui->lineEdit_arguments->text();
-
-    p.execute(QString("avrdude.exe -s -C avrdude.conf -c %1 -p %2 ")
+#ifndef Q_OS_LINUX
+    p.execute(QString("avrdude -s -C avrdude.conf -c %1 -p %2 ")
               .arg(last_programmer, last_device)
               + last_arguments);
+#else
+    p.execute(QString("avrdude -s -c %1 -p %2 ")
+              .arg(last_programmer, last_device)
+              + last_arguments);
+#endif
     ui->textBrowser->append(p.std_out_data);
     ui->textBrowser->append("--------------");
     ui->textBrowser->append(p.std_err_data);

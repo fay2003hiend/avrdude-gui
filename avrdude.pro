@@ -18,5 +18,7 @@ HEADERS  += widget.h
 
 FORMS    += widget.ui
 
+win32 : {
 RESOURCES += \
-    binaries.qrc
+    binaries_win32.qrc
+}
